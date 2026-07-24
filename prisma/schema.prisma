@@ -9,6 +9,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Channel {
+  email
+  phone
+}
+
 enum Role {
   candidate
   admin
@@ -62,6 +67,18 @@ model Job {
   applications Application[]
 
   @@index([status])
+}
+
+model OtpChallenge {
+  id         String   @id @default(cuid())
+  identifier String // normalized email or E.164 phone
+  channel    Channel
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([identifier])
 }
 
 model Application {
