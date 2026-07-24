@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import { ok, fail } from "@/lib/api";
+import { ok, fail, onError } from "@/lib/api";
 import { verifyOtpSchema } from "@/lib/validation";
 import { codeMatches, isExpired, normalizeIdentifier, OTP_MAX_ATTEMPTS } from "@/lib/otp";
 import { setSessionCookie } from "@/lib/session";
 
 export async function POST(req: Request) {
+  try {
   const parsed = verifyOtpSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid request");
 
@@ -41,4 +42,7 @@ export async function POST(req: Request) {
 
   await setSessionCookie({ userId: user.id, role: user.role });
   return ok({ userId: user.id, role: user.role });
+  } catch (e) {
+    return onError(e);
+  }
 }
