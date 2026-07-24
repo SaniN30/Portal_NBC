@@ -17,3 +17,20 @@ export const requestOtpSchema = z
 export const verifyOtpSchema = requestOtpSchema.and(
   z.object({ code: z.string().regex(/^\d{6}$/, "Enter the 6-digit code") }),
 );
+
+export const profileSchema = z.object({
+  fullName: z.string().min(1).max(120),
+  dob: z.coerce.date().max(new Date(), "DOB must be in the past"),
+  phone: z.string().regex(/^\+?[0-9\s()-]{7,20}$/).optional().or(z.literal("")),
+  email: z.string().email().optional().or(z.literal("")),
+});
+
+export const jobSchema = z.object({
+  title: z.string().min(1).max(160),
+  description: z.string().min(1),
+  location: z.string().max(120).optional().or(z.literal("")),
+  engineeringField: z.string().max(120).optional().or(z.literal("")),
+  status: z.enum(["live", "closed"]).default("live"),
+});
+
+export const promoteAdminSchema = z.object({ email: z.string().email() });
