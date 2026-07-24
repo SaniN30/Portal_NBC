@@ -91,13 +91,13 @@ function LoginForm() {
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               placeholder={channel === "email" ? "you@example.com" : "+91 98765 43210"}
-              className="rounded-lg border border-neutral-300 px-3 py-2 outline-none focus:border-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:focus:border-neutral-100"
+              className="input"
             />
           </label>
 
           <button
             disabled={busy}
-            className="rounded-lg bg-neutral-900 py-2.5 font-medium text-white transition hover:bg-neutral-700 disabled:opacity-50 dark:bg-white dark:text-neutral-900"
+            className="btn btn-primary w-full py-2.5"
           >
             {busy ? "Sending…" : "Send code"}
           </button>
@@ -117,11 +117,11 @@ function LoginForm() {
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
             placeholder="000000"
-            className="rounded-lg border border-neutral-300 px-3 py-2 text-center text-lg tracking-[0.5em] outline-none focus:border-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:focus:border-neutral-100"
+            className="input text-center text-lg tracking-[0.5em]"
           />
           <button
             disabled={busy}
-            className="rounded-lg bg-neutral-900 py-2.5 font-medium text-white transition hover:bg-neutral-700 disabled:opacity-50 dark:bg-white dark:text-neutral-900"
+            className="btn btn-primary w-full py-2.5"
           >
             {busy ? "Verifying…" : "Verify & sign in"}
           </button>

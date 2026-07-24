@@ -42,7 +42,7 @@ export default function ListingPage() {
       ) : (
         <ul className="flex flex-col gap-4">
           {jobs.map((j) => (
-            <li key={j.id} className="rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
+            <li key={j.id} className="card p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h2 className="font-medium">{j.title}</h2>
@@ -50,10 +50,7 @@ export default function ListingPage() {
                     {[j.engineeringField, j.location].filter(Boolean).join(" · ") || "—"}
                   </p>
                 </div>
-                <button onClick={() => apply(j.id)}
-                  className="shrink-0 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700 dark:bg-white dark:text-neutral-900">
-                  Apply
-                </button>
+                <button onClick={() => apply(j.id)} className="btn btn-primary shrink-0">Apply</button>
               </div>
               <p className="mt-3 whitespace-pre-line text-sm text-neutral-600 dark:text-neutral-300">{j.description}</p>
             </li>

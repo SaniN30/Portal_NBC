@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
+/* Neev Bridge design system — steel-blue engineering brand, warm amber accent. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --surface-2: #f1f3f9;
+  --border: #e3e7ef;
+  --text: #0d1526;
+  --muted: #5b6577;
+  --brand: #1b3a8f;
+  --brand-600: #234bb3;
+  --brand-fg: #ffffff;
+  --accent: #f59e0b;
+  --ring: #234bb3;
+  --radius: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #080b12;
+    --surface: #0f1420;
+    --surface-2: #151b2b;
+    --border: #232b3d;
+    --text: #eef1f7;
+    --muted: #9aa4b8;
+    --brand: #6f8dff;
+    --brand-600: #5b7bff;
+    --brand-fg: #0a0f1c;
+    --accent: #fbbf24;
+    --ring: #6f8dff;
   }
 }
 
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-600: var(--brand-600);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-sans-app);
+  --font-display: var(--font-display-app);
+}
+
+* { border-color: var(--border); }
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans-app), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: color-mix(in oklab, var(--accent) 35%, transparent); }
+
+h1, h2, h3 { font-family: var(--font-display-app), var(--font-sans-app), sans-serif; letter-spacing: -0.02em; }
+
+@layer components {
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 2px rgb(13 21 38 / 0.04), 0 1px 1px rgb(13 21 38 / 0.03);
+  }
+  .input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 0.6rem 0.8rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .input:focus { border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 22%, transparent); }
+  .input::placeholder { color: var(--muted); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    border-radius: 0.625rem; padding: 0.6rem 1.1rem; font-weight: 600; font-size: .9rem;
+    cursor: pointer; transition: transform .05s, background .15s, opacity .15s, border-color .15s;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-primary { background: var(--brand); color: var(--brand-fg); }
+  .btn-primary:hover:not(:disabled) { background: var(--brand-600); }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-ghost:hover:not(:disabled) { background: var(--surface-2); }
+  .btn-danger { background: transparent; color: #dc2626; border-color: color-mix(in oklab, #dc2626 30%, var(--border)); }
+  .btn-danger:hover:not(:disabled) { background: color-mix(in oklab, #dc2626 10%, transparent); }
+  .badge {
+    display: inline-flex; align-items: center; gap: .35rem; font-size: .72rem; font-weight: 600;
+    padding: .18rem .55rem; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--surface-2); color: var(--muted); text-transform: capitalize;
+  }
+  .link { color: var(--brand-600); text-decoration: none; }
+  .link:hover { text-decoration: underline; }
+  .muted { color: var(--muted); }
 }

@@ -34,3 +34,13 @@ export const jobSchema = z.object({
 });
 
 export const promoteAdminSchema = z.object({ email: z.string().email() });
+
+export const applicationStatusSchema = z.object({
+  status: z.enum(["applied", "reviewed", "shortlisted", "rejected"]),
+});
+
+export const contactSchema = z.object({
+  userId: z.string().min(1),
+  subject: z.string().min(1).max(200),
+  message: z.string().min(1).max(5000),
+});
