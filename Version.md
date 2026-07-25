@@ -38,6 +38,7 @@
 - Job CRUD: post, list, soft-close (`/api/jobs`, `/api/jobs/[id]`)
 - **Application review** — change status: applied → reviewed → shortlisted → rejected (`/api/admin/applications`, `[id]` PATCH)
 - **Contact candidates** — email a candidate from a modal (`/api/admin/contact`, via Resend)
+- **Candidate CSV export** — "Download CSV" on the Candidates tab (`/api/admin/candidates/export`, admin-gated)
 - **Admin management** — any admin can promote another by email; seeded `neevbridgeconsultancy@gmail.com` is the first admin (`/api/admin/admins`)
 - Admins log in through the same OTP flow; role gates `/admin`
 

@@ -115,6 +115,9 @@ function Candidates() {
   useEffect(() => { load(); }, []);
   return (
     <div className="overflow-x-auto">
+      <div className="mb-3 flex justify-end">
+        <a href="/api/admin/candidates/export" className="text-sm text-blue-600 hover:underline">Download CSV</a>
+      </div>
       <table className="w-full text-left text-sm">
         <thead className="text-neutral-500"><tr>
           <th className="py-2">Name</th><th>Email</th><th>Phone</th><th>Nationality</th><th>Apps</th><th>Resume</th><th>Aadhaar</th></tr></thead>
