@@ -193,7 +193,7 @@ export default function Home() {
 
       {/* CTA */}
       <section className="mx-auto max-w-5xl px-6 py-20">
-        <div data-reveal className="relative overflow-hidden rounded-[1.75rem] bg-[#0b1c3f] px-8 py-16 text-center">
+        <div data-reveal className="beam-border relative overflow-hidden rounded-[1.75rem] bg-[#0b1c3f] px-8 py-16 text-center">
           <div aria-hidden className="pointer-events-none absolute inset-0 opacity-30"
             style={{ background: "radial-gradient(50% 60% at 50% 0%, color-mix(in oklab, var(--brand) 60%, transparent), transparent 70%)" }} />
           <Image src={logoMark} alt="" aria-hidden className="relative mx-auto mb-6 h-12 w-auto brightness-0 invert" />

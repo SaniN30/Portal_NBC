@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
+import SmoothScroll from "@/components/SmoothScroll";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ variable: "--font-sans-app", subsets: ["latin"] });
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 const sourceSerif = Source_Serif_4({
   variable: "--font-display-app",
   subsets: ["latin"],
@@ -26,11 +28,12 @@ const themeScript = `
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${sourceSerif.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" className={cn("h-full", "antialiased", sourceSerif.variable, "font-sans", inter.variable)} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="flex min-h-full flex-col">
+        <SmoothScroll />
         <SiteHeader />
         <div className="flex flex-1 flex-col pt-20 sm:pt-24">{children}</div>
         <SiteFooter />
