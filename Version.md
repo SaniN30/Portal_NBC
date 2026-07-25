@@ -29,7 +29,7 @@
 
 ### Phase 2 — Candidate + Public
 - `/` home (about the company), `/contact`
-- `/profile` — view/edit details (name, DOB, phone, email), resume upload/replace to Blob (PDF/Word, ≤5 MB)
+- `/profile` — view/edit details (name, DOB, phone, email, **nationality**), resume upload/replace to Blob (PDF/Word, ≤5 MB), **Aadhaar card upload for verification** (PDF/JPG/PNG, ≤5 MB, `/api/me/aadhaar`)
 - `/listing` — live jobs, one-click apply (deduped: one application per job)
 - APIs: `/api/me` (GET/PUT), `/api/me/resume`, `/api/jobs` (GET), `/api/applications` (GET/POST)
 
@@ -40,6 +40,11 @@
 - **Contact candidates** — email a candidate from a modal (`/api/admin/contact`, via Resend)
 - **Admin management** — any admin can promote another by email; seeded `neevbridgeconsultancy@gmail.com` is the first admin (`/api/admin/admins`)
 - Admins log in through the same OTP flow; role gates `/admin`
+
+### Sign-in role selector + verification fields
+- Login page has a **User / Admin** toggle; picking Admin shows a disclaimer ("restricted to authorized personnel") and routes to `/admin` after verify. Admin is **not** a separate credential — it's a DB role; the real gate stays server-side (middleware blocks non-admins from `/admin`). So user vs admin sign-in use the identical OTP flow; the toggle is routing + disclaimer only.
+- Signup collects no form (first OTP verify creates the account); profile details — now including **nationality** and **Aadhaar upload** — are completed on `/profile`.
+- Schema: `User.nationality`, `User.aadhaarBlobUrl` (migration `1_add_nationality_aadhaar`, applied via `prisma migrate deploy` in the Vercel build).
 
 ### Free-tier hardening
 - Phone login gated behind Twilio config: API rejects phone OTP cleanly when Twilio is unset; login UI hides the channel toggle (email-only) unless `NEXT_PUBLIC_PHONE_LOGIN_ENABLED=1`. No "no provider" crash for users.
@@ -77,5 +82,6 @@
 
 ## Known ceilings (deliberate, documented)
 - Resume storage: public-unguessable, not signed-private (see above).
+- **Aadhaar storage: same public-unguessable Blob as resumes** — this is sensitive PII; hardening to private + signed URLs is more urgent here than for resumes (flagged with a `ponytail:` comment in `src/app/api/me/aadhaar/route.ts`).
 - Admin model is **flat** — any admin can add/remove admins (matches "admin team gets all rights" in Idea.md). No super-admin tier.
 - OTP is self-hosted (not Twilio Verify) so email + phone share one verify path.

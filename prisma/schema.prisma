@@ -38,6 +38,8 @@ model User {
   phone            String?   @unique
   email            String?   @unique
   role             Role      @default(candidate)
+  nationality      String?
+  aadhaarBlobUrl   String?
   resumeBlobUrl    String?
   resumeUploadedAt DateTime?
   phoneVerified    Boolean   @default(false)

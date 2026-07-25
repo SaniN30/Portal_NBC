@@ -5,7 +5,7 @@ import { profileSchema } from "@/lib/validation";
 
 const SELECT = {
   id: true, fullName: true, dob: true, phone: true, email: true, role: true,
-  resumeBlobUrl: true, resumeUploadedAt: true,
+  nationality: true, aadhaarBlobUrl: true, resumeBlobUrl: true, resumeUploadedAt: true,
 } as const;
 
 export async function GET() {
@@ -23,10 +23,10 @@ export async function PUT(req: Request) {
     const { userId } = await requireSession();
     const parsed = profileSchema.safeParse(await req.json().catch(() => null));
     if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
-    const { fullName, dob, phone, email } = parsed.data;
+    const { fullName, dob, phone, email, nationality } = parsed.data;
     const user = await prisma.user.update({
       where: { id: userId },
-      data: { fullName, dob, phone: phone || null, email: email || null },
+      data: { fullName, dob, phone: phone || null, email: email || null, nationality: nationality || null },
       select: SELECT,
     });
     return ok(user);

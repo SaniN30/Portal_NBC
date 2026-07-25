@@ -23,6 +23,7 @@ export const profileSchema = z.object({
   dob: z.coerce.date().max(new Date(), "DOB must be in the past"),
   phone: z.string().regex(/^\+?[0-9\s()-]{7,20}$/).optional().or(z.literal("")),
   email: z.string().email().optional().or(z.literal("")),
+  nationality: z.string().max(60).optional().or(z.literal("")),
 });
 
 export const jobSchema = z.object({
