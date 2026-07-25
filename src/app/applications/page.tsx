@@ -70,14 +70,16 @@ export default function ApplicationsPage() {
 
           <ul className="flex flex-col gap-3">
             {apps.map((a) => (
-              <li key={a.id} className="card flex items-center justify-between gap-4 border-l-4 p-5"
-                style={{ borderLeftColor: STATUS[a.status].color }}>
-                <div className="min-w-0">
-                  <h2 className="truncate font-semibold">{a.job.title}</h2>
-                  <p className="mt-0.5 text-xs text-[var(--muted)]">
-                    Applied {new Date(a.appliedAt).toLocaleDateString()}
-                    {a.job.status !== "live" && " · position closed"}
-                  </p>
+              <li key={a.id} className="card flex items-center justify-between gap-4 p-5">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: STATUS[a.status].color }} />
+                  <div className="min-w-0">
+                    <h2 className="truncate font-semibold">{a.job.title}</h2>
+                    <p className="mt-0.5 text-xs text-[var(--muted)]">
+                      Applied {new Date(a.appliedAt).toLocaleDateString()}
+                      {a.job.status !== "live" && " · position closed"}
+                    </p>
+                  </div>
                 </div>
                 <span className="badge shrink-0" style={{ color: STATUS[a.status].color, borderColor: STATUS[a.status].color }}>
                   {STATUS[a.status].label}
