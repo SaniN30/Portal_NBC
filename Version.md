@@ -41,6 +41,9 @@
 - **Admin management** — any admin can promote another by email; seeded `neevbridgeconsultancy@gmail.com` is the first admin (`/api/admin/admins`)
 - Admins log in through the same OTP flow; role gates `/admin`
 
+### Free-tier hardening
+- Phone login gated behind Twilio config: API rejects phone OTP cleanly when Twilio is unset; login UI hides the channel toggle (email-only) unless `NEXT_PUBLIC_PHONE_LOGIN_ENABLED=1`. No "no provider" crash for users.
+
 ### Phase 5 (partial) — Design
 - Brand design system: steel-blue + amber tokens (light/dark), Inter + Sora fonts
 - Sticky header + footer across all pages
@@ -57,7 +60,7 @@
 ## 🔧 Pending — needs your accounts (not code)
 
 1. **Resend domain verification** — verify a domain at resend.com/domains and set `OTP_FROM_EMAIL` to `@yourdomain`. Until then, test mode only delivers to `nautiyalsanidhya30@gmail.com`. **Required to serve real users.**
-2. **Twilio (optional)** — add `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` for live SMS/phone login. Phone login already works in dev.
+2. **Twilio (optional)** — phone login is **disabled** until configured. To enable: set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` **and** `NEXT_PUBLIC_PHONE_LOGIN_ENABLED=1`, then redeploy. Until then the login UI is email-only and the API rejects phone OTP with a clean message (no crash).
 3. **Seed production admin** — done for the two test emails; re-run the SQL for any additional admins.
 4. **GitHub auto-deploy (optional)** — connect the repo in Vercel → Settings → Git for push-to-deploy (currently deploying via CLI).
 

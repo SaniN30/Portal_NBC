@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 type Channel = "email" | "phone";
 
+// Phone stays hidden until Twilio is configured (set this to "1" then too).
+const PHONE_ENABLED = process.env.NEXT_PUBLIC_PHONE_LOGIN_ENABLED === "1";
+
 async function post(url: string, body: unknown) {
   const res = await fetch(url, {
     method: "POST",
@@ -65,21 +68,23 @@ function LoginForm() {
 
       {step === "request" ? (
         <form onSubmit={requestCode} className="flex flex-col gap-4">
-          <div className="flex rounded-lg bg-neutral-100 p-1 text-sm dark:bg-neutral-800">
-            {(["email", "phone"] as Channel[]).map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setChannel(c)}
-                aria-pressed={channel === c}
-                className={`flex-1 rounded-md py-2 capitalize transition ${
-                  channel === c ? "bg-white shadow-sm dark:bg-neutral-700" : "text-neutral-500"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
+          {PHONE_ENABLED && (
+            <div className="flex rounded-lg bg-neutral-100 p-1 text-sm dark:bg-neutral-800">
+              {(["email", "phone"] as Channel[]).map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setChannel(c)}
+                  aria-pressed={channel === c}
+                  className={`flex-1 rounded-md py-2 capitalize transition ${
+                    channel === c ? "bg-white shadow-sm dark:bg-neutral-700" : "text-neutral-500"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          )}
 
           <label className="flex flex-col gap-1 text-sm">
             <span className="font-medium">{channel === "email" ? "Email address" : "Phone number"}</span>

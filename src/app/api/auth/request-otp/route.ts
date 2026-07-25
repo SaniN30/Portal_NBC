@@ -10,6 +10,13 @@ export async function POST(req: Request) {
     if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid request");
 
     const { channel } = parsed.data;
+
+    // Only offer channels that have a provider configured. Phone stays off until
+    // Twilio is set, so users never hit a "no provider" crash.
+    if (channel === "phone" && !(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_FROM_NUMBER)) {
+      return fail("Phone login isn't available yet — please sign in with email.", 400);
+    }
+
     const identifier = normalizeIdentifier(channel, parsed.data.identifier);
 
     // Rate limit: block if a code was just issued.
