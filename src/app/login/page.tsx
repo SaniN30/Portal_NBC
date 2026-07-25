@@ -27,7 +27,7 @@ function LoginForm() {
 
   const [loginAs, setLoginAs] = useState<LoginAs>("user");
   // Where to land after verify. Admin role is still enforced server-side —
-  // picking "Admin" only routes you there; middleware blocks non-admins.
+  // picking "Admin" only routes you there; proxy blocks non-admins.
   const nextPath = explicitNext ?? (loginAs === "admin" ? "/admin" : "/profile");
 
   const [channel, setChannel] = useState<Channel>("email");
