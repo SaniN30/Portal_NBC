@@ -76,9 +76,9 @@ body {
 ::selection { background: color-mix(in oklab, var(--brand) 30%, transparent); }
 
 h1, h2, h3 {
-  font-family: var(--font-display-app), ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: -0.025em;
-  font-weight: 700;
+  font-family: var(--font-display-app), ui-serif, Georgia, "Times New Roman", serif;
+  letter-spacing: -0.015em;
+  font-weight: 600;
 }
 
 /* Theme-aware logo: swap ink variant so navy stays legible on dark surfaces. */
