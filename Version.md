@@ -65,7 +65,7 @@
 
 1. **Resume privacy hardening** — resumes are `public` Blob URLs with unguessable paths; upgrade to private + signed download URLs for strict PII gating. *(flagged with a `ponytail:` comment in `src/app/api/me/resume/route.ts`)*
 2. **Design polish across remaining surfaces** — profile and admin sub-tabs still use baseline neutral styling; a full impeccable pass would unify them, add motion/empty-states, and an accessibility audit (Phase 5 completion).
-3. **Candidate applications page** — `/applications` list for candidates (API exists; no dedicated page yet — apply confirmation shows on listing).
+3. ~~**Candidate applications page**~~ — ✅ built: `/applications` lists a candidate's applications with status badges (applied/reviewed/shortlisted/rejected); linked in header nav.
 4. **Tests** — unit self-check exists for OTP logic; integration + E2E (login→apply, admin→post-job) and the 80% coverage target from the plan are not yet built.
 5. **Rate limiting** beyond OTP — per-IP limits on other endpoints not yet added.
 6. **`db:seed` script** — reads `SEED_ADMIN_EMAIL`; needs a non-sensitive DB URL locally, so admins are currently seeded via the Neon SQL console instead.

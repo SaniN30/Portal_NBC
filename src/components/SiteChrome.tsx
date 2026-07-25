@@ -10,6 +10,7 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-1 text-sm">
           <Link href="/listing" className="rounded-lg px-3 py-2 text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]">Jobs</Link>
+          <Link href="/applications" className="rounded-lg px-3 py-2 text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]">Applications</Link>
           <Link href="/contact" className="rounded-lg px-3 py-2 text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]">Contact</Link>
           <Link href="/profile" className="btn btn-primary ml-1 px-4 py-2">My account</Link>
         </nav>
