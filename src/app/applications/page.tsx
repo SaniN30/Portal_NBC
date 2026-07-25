@@ -70,7 +70,7 @@ export default function ApplicationsPage() {
 
           <ul className="flex flex-col gap-3">
             {apps.map((a) => (
-              <li key={a.id} className="card flex items-center justify-between gap-4 p-5">
+              <li key={a.id} data-reveal-css className="card flex items-center justify-between gap-4 p-5 transition hover:-translate-y-0.5">
                 <div className="flex min-w-0 items-center gap-3">
                   <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: STATUS[a.status].color }} />
                   <div className="min-w-0">

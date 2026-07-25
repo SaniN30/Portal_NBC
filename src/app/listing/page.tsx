@@ -98,7 +98,7 @@ export default function ListingPage() {
             {shown.map((j) => {
               const isApplied = applied.has(j.id);
               return (
-                <li key={j.id} className="card group p-5 transition hover:border-[color-mix(in_oklab,var(--brand)_45%,var(--border))]">
+                <li key={j.id} data-reveal-css className="card group p-5 transition hover:-translate-y-0.5 hover:border-[color-mix(in_oklab,var(--brand)_45%,var(--border))]">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <h2 className="font-display text-lg font-semibold">{j.title}</h2>

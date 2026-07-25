@@ -1,34 +1,47 @@
 @import "tailwindcss";
 
-/* Neev Bridge design system — white ground, logo green brand, navy ink accent. */
+/* Neev Bridge design system — white ground, logo green brand, navy ink accent.
+   Theme is driven by data-theme on <html>, set before paint (see layout.tsx). */
 :root {
-  --bg: #ffffff;
+  --bg: #fbfcfb;
   --surface: #ffffff;
-  --surface-2: #f2f7f4;
-  --border: #e2ebe6;
+  --surface-2: #f1f6f2;
+  --border: #e0e9e3;
   --text: #0d2149;
-  --muted: #566072;
+  --muted: #5a6576;
   --brand: #1e8a4f;
-  --brand-600: #17703f;
+  --brand-600: #16723f;
   --brand-fg: #ffffff;
   --accent: #0d2149;
   --ring: #1e8a4f;
-  --radius: 0.75rem;
+  --radius: 0.85rem;
+  --glass-hi: rgb(255 255 255 / 0.6);
+  --glass-shadow: 13 21 38;
 }
 
+:root[data-theme="dark"] {
+  --bg: #070c11;
+  --surface: #0f1720;
+  --surface-2: #16212c;
+  --border: #223140;
+  --text: #eaf2ee;
+  --muted: #9fb0aa;
+  --brand: #3ad884;
+  --brand-600: #2fc776;
+  --brand-fg: #04180d;
+  --accent: #9db8ec;
+  --ring: #3ad884;
+  --glass-hi: rgb(255 255 255 / 0.08);
+  --glass-shadow: 0 0 0;
+}
+
+/* No-JS fallback: honor system preference when data-theme is absent. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0a0f14;
-    --surface: #111820;
-    --surface-2: #16202a;
-    --border: #24313c;
-    --text: #eaf1ee;
-    --muted: #9aa9a2;
-    --brand: #34d17f;
-    --brand-600: #2bbd70;
-    --brand-fg: #062012;
-    --accent: #8fa6d8;
-    --ring: #34d17f;
+  :root:not([data-theme]) {
+    --bg: #070c11; --surface: #0f1720; --surface-2: #16212c; --border: #223140;
+    --text: #eaf2ee; --muted: #9fb0aa; --brand: #3ad884; --brand-600: #2fc776;
+    --brand-fg: #04180d; --accent: #9db8ec; --ring: #3ad884;
+    --glass-hi: rgb(255 255 255 / 0.08); --glass-shadow: 0 0 0;
   }
 }
 
@@ -48,24 +61,32 @@
 
 * { border-color: var(--border); }
 
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
 body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans-app), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color .4s ease, color .4s ease;
 }
 
-::selection { background: color-mix(in oklab, var(--accent) 35%, transparent); }
+::selection { background: color-mix(in oklab, var(--brand) 30%, transparent); }
 
-h1, h2, h3 { font-family: var(--font-display-app), var(--font-sans-app), sans-serif; letter-spacing: -0.02em; }
+h1, h2, h3 {
+  font-family: var(--font-display-app), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
 
 @layer components {
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: 0 1px 2px rgb(13 21 38 / 0.04), 0 1px 1px rgb(13 21 38 / 0.03);
+    box-shadow: 0 1px 2px rgb(var(--glass-shadow) / 0.05), 0 1px 1px rgb(var(--glass-shadow) / 0.03);
   }
   .input {
     width: 100%;
@@ -81,16 +102,16 @@ h1, h2, h3 { font-family: var(--font-display-app), var(--font-sans-app), sans-se
   .input::placeholder { color: var(--muted); }
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-    border-radius: 0.625rem; padding: 0.6rem 1.1rem; font-weight: 600; font-size: .9rem;
-    cursor: pointer; transition: transform .05s, background .15s, opacity .15s, border-color .15s;
+    border-radius: 0.7rem; padding: 0.6rem 1.1rem; font-weight: 600; font-size: .9rem;
+    cursor: pointer; transition: transform .12s cubic-bezier(.2,.8,.2,1), background .15s, opacity .15s, border-color .15s, box-shadow .15s;
     border: 1px solid transparent; white-space: nowrap;
   }
-  .btn:active { transform: translateY(1px); }
+  .btn:active { transform: translateY(1px) scale(.99); }
   .btn:disabled { opacity: .55; cursor: not-allowed; }
-  .btn-primary { background: var(--brand); color: var(--brand-fg); }
-  .btn-primary:hover:not(:disabled) { background: var(--brand-600); }
+  .btn-primary { background: var(--brand); color: var(--brand-fg); box-shadow: 0 6px 18px -8px color-mix(in oklab, var(--brand) 70%, transparent); }
+  .btn-primary:hover:not(:disabled) { background: var(--brand-600); transform: translateY(-1px); box-shadow: 0 10px 24px -8px color-mix(in oklab, var(--brand) 75%, transparent); }
   .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
-  .btn-ghost:hover:not(:disabled) { background: var(--surface-2); }
+  .btn-ghost:hover:not(:disabled) { background: var(--surface-2); transform: translateY(-1px); }
   .btn-danger { background: transparent; color: #dc2626; border-color: color-mix(in oklab, #dc2626 30%, var(--border)); }
   .btn-danger:hover:not(:disabled) { background: color-mix(in oklab, #dc2626 10%, transparent); }
   .badge {
@@ -101,4 +122,37 @@ h1, h2, h3 { font-family: var(--font-display-app), var(--font-sans-app), sans-se
   .link { color: var(--brand-600); text-decoration: none; }
   .link:hover { text-decoration: underline; }
   .muted { color: var(--muted); }
+
+  /* Liquid glass — floating navbar pill and any frosted surface. */
+  .glass {
+    background: color-mix(in oklab, var(--surface) 58%, transparent);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid color-mix(in oklab, var(--text) 9%, transparent);
+    box-shadow:
+      0 10px 34px -14px rgb(var(--glass-shadow) / 0.3),
+      inset 0 1px 0 var(--glass-hi),
+      inset 0 0 0 1px rgb(255 255 255 / 0.02);
+  }
+}
+
+/* Auto-scrolling fields marquee on the home hero. */
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track { animation: marquee 32s linear infinite; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+}
+
+/* Zero-JS scroll reveal for content pages (home uses GSAP separately). */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-reveal-css] {
+      animation: revealCss linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 20%;
+    }
+    @keyframes revealCss {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: none; }
+    }
+  }
 }

@@ -86,7 +86,7 @@ export default function ProfilePage() {
       </header>
 
       {/* Personal details */}
-      <section className="card mt-8 p-6">
+      <section data-reveal-css className="card mt-8 p-6">
         <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-[var(--muted)]">Personal details</h2>
         <form onSubmit={save} className="mt-4 grid gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-1 text-sm sm:col-span-2"><span className="font-medium">Full name</span>
@@ -106,7 +106,7 @@ export default function ProfilePage() {
       </section>
 
       {/* Documents */}
-      <section className="card mt-6 p-6">
+      <section data-reveal-css className="card mt-6 p-6">
         <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-[var(--muted)]">Documents</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <DocRow
