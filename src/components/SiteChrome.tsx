@@ -1,11 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
+import logo from "../../public/logo.png";
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[color-mix(in_oklab,var(--bg)_85%,transparent)] backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3.5">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--brand)] font-display text-sm font-bold text-[var(--brand-fg)]">NB</span>
+          <Image src={logo} alt="Neev Bridge Consultancy" priority className="h-9 w-9 object-contain" />
           <span className="font-display text-[0.95rem] font-semibold tracking-tight">Neev Bridge</span>
         </Link>
         <nav className="flex items-center gap-1 text-sm">

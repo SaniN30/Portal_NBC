@@ -1,34 +1,34 @@
 @import "tailwindcss";
 
-/* Neev Bridge design system — steel-blue engineering brand, warm amber accent. */
+/* Neev Bridge design system — white ground, logo green brand, navy ink accent. */
 :root {
-  --bg: #f7f8fb;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface-2: #f1f3f9;
-  --border: #e3e7ef;
-  --text: #0d1526;
-  --muted: #5b6577;
-  --brand: #1b3a8f;
-  --brand-600: #234bb3;
+  --surface-2: #f2f7f4;
+  --border: #e2ebe6;
+  --text: #0d2149;
+  --muted: #566072;
+  --brand: #1e8a4f;
+  --brand-600: #17703f;
   --brand-fg: #ffffff;
-  --accent: #f59e0b;
-  --ring: #234bb3;
+  --accent: #0d2149;
+  --ring: #1e8a4f;
   --radius: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #080b12;
-    --surface: #0f1420;
-    --surface-2: #151b2b;
-    --border: #232b3d;
-    --text: #eef1f7;
-    --muted: #9aa4b8;
-    --brand: #6f8dff;
-    --brand-600: #5b7bff;
-    --brand-fg: #0a0f1c;
-    --accent: #fbbf24;
-    --ring: #6f8dff;
+    --bg: #0a0f14;
+    --surface: #111820;
+    --surface-2: #16202a;
+    --border: #24313c;
+    --text: #eaf1ee;
+    --muted: #9aa9a2;
+    --brand: #34d17f;
+    --brand-600: #2bbd70;
+    --brand-fg: #062012;
+    --accent: #8fa6d8;
+    --ring: #34d17f;
   }
 }
 
