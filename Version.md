@@ -82,6 +82,6 @@
 
 ## Known ceilings (deliberate, documented)
 - Resume storage: public-unguessable, not signed-private (see above).
-- **Aadhaar storage: same public-unguessable Blob as resumes** — this is sensitive PII; hardening to private + signed URLs is more urgent here than for resumes (flagged with a `ponytail:` comment in `src/app/api/me/aadhaar/route.ts`).
+- **Aadhaar storage: hardened** — stored in **private** Blob (no public URL); viewable only by streaming through auth-checked routes (`/api/me/aadhaar` for self, `/api/admin/aadhaar/[userId]` for admins). Resumes are still public-unguessable — apply the same treatment if resume PII must be gated too.
 - Admin model is **flat** — any admin can add/remove admins (matches "admin team gets all rights" in Idea.md). No super-admin tier.
 - OTP is self-hosted (not Twilio Verify) so email + phone share one verify path.

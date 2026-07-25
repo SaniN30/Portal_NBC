@@ -50,8 +50,8 @@ export default function ProfilePage() {
     setMsg("Uploading…");
     const fd = new FormData(); fd.append("aadhaar", file);
     try {
-      const r = await api<{ aadhaarBlobUrl: string }>("/api/me/aadhaar", { method: "POST", body: fd });
-      setMe((m) => ({ ...m!, ...r })); setMsg("Aadhaar uploaded.");
+      await api<{ hasAadhaar: boolean }>("/api/me/aadhaar", { method: "POST", body: fd });
+      setMe((m) => ({ ...m!, aadhaarBlobUrl: "uploaded" })); setMsg("Aadhaar uploaded.");
     } catch (e) { setMsg((e as Error).message); }
   }
 
@@ -100,7 +100,7 @@ export default function ProfilePage() {
       <section className="mt-6 rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
         <h2 className="font-medium">Aadhaar card <span className="text-xs font-normal text-neutral-500">(for verification)</span></h2>
         {me.aadhaarBlobUrl ? (
-          <a href={me.aadhaarBlobUrl} target="_blank" rel="noreferrer" className="mt-1 block text-sm text-blue-600 hover:underline">
+          <a href="/api/me/aadhaar" target="_blank" rel="noreferrer" className="mt-1 block text-sm text-blue-600 hover:underline">
             View uploaded Aadhaar
           </a>
         ) : <p className="mt-1 text-sm text-neutral-500">No Aadhaar uploaded yet.</p>}

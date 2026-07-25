@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/client";
 
-type Candidate = { id: string; fullName: string | null; email: string | null; phone: string | null; resumeBlobUrl: string | null; _count: { applications: number } };
+type Candidate = { id: string; fullName: string | null; email: string | null; phone: string | null; nationality: string | null; resumeBlobUrl: string | null; aadhaarBlobUrl: string | null; _count: { applications: number } };
 type Admin = { id: string; email: string | null; fullName: string | null };
 type Job = { id: string; title: string; status: string };
 
@@ -117,13 +117,15 @@ function Candidates() {
     <div className="overflow-x-auto">
       <table className="w-full text-left text-sm">
         <thead className="text-neutral-500"><tr>
-          <th className="py-2">Name</th><th>Email</th><th>Phone</th><th>Apps</th><th>Resume</th></tr></thead>
+          <th className="py-2">Name</th><th>Email</th><th>Phone</th><th>Nationality</th><th>Apps</th><th>Resume</th><th>Aadhaar</th></tr></thead>
         <tbody>
           {items.map((c) => (
             <tr key={c.id} className="border-t border-neutral-200 dark:border-neutral-800">
               <td className="py-2">{c.fullName ?? "—"}</td><td>{c.email ?? "—"}</td><td>{c.phone ?? "—"}</td>
+              <td>{c.nationality ?? "—"}</td>
               <td>{c._count.applications}</td>
               <td>{c.resumeBlobUrl ? <a href={c.resumeBlobUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">View</a> : "—"}</td>
+              <td>{c.aadhaarBlobUrl ? <a href={`/api/admin/aadhaar/${c.id}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">View</a> : "—"}</td>
             </tr>
           ))}
         </tbody>

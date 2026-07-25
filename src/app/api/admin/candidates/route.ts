@@ -14,8 +14,8 @@ export async function GET(req: Request) {
       take: PAGE + 1,
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
       orderBy: { id: "asc" },
-      select: { id: true, fullName: true, email: true, phone: true,
-        resumeBlobUrl: true, createdAt: true, _count: { select: { applications: true } } },
+      select: { id: true, fullName: true, email: true, phone: true, nationality: true,
+        resumeBlobUrl: true, aadhaarBlobUrl: true, createdAt: true, _count: { select: { applications: true } } },
     });
     const hasMore = rows.length > PAGE;
     const items = hasMore ? rows.slice(0, PAGE) : rows;
