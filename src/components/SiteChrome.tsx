@@ -4,6 +4,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import logoMark from "../../public/logo-mark.png";
+import logoMarkDark from "../../public/logo-mark-dark.png";
+
+function LogoMark({ className }: { className?: string }) {
+  return (
+    <>
+      <Image src={logoMark} alt="Neev Bridge Consultancy" priority className={`logo-light ${className ?? ""}`} />
+      <Image src={logoMarkDark} alt="Neev Bridge Consultancy" priority className={`logo-dark ${className ?? ""}`} />
+    </>
+  );
+}
 
 const NAV = [
   { href: "/listing", label: "Jobs" },
@@ -62,8 +72,8 @@ export function SiteHeader() {
       <div className={`glass w-full max-w-3xl rounded-[1.4rem] transition-all duration-300 ${scrolled ? "shadow-lg" : ""}`}>
         <div className="flex items-center justify-between gap-2 px-3 py-2 sm:px-4">
           <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-            <Image src={logoMark} alt="Neev Bridge Consultancy" priority className="h-7 w-auto sm:h-8" />
-            <span className="font-display text-[1.02rem] font-semibold tracking-tight">Neev Bridge</span>
+            <LogoMark className="h-7 w-auto sm:h-8" />
+            <span className="font-display text-[1.02rem] font-bold tracking-tight">Neev Bridge</span>
           </Link>
 
           <nav className="hidden items-center gap-1 text-sm sm:flex">
@@ -111,7 +121,7 @@ export function SiteFooter() {
     <footer className="mt-auto border-t border-[var(--border)]">
       <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-3 px-6 py-10 text-sm text-[var(--muted)] sm:flex-row sm:items-center">
         <div className="flex items-center gap-2.5">
-          <Image src={logoMark} alt="" aria-hidden className="h-6 w-auto opacity-90" />
+          <LogoMark className="h-6 w-auto opacity-90" />
           <p>© {new Date().getFullYear()} Neev Bridge Consultancy Manpower</p>
         </div>
         <nav className="flex gap-4">
