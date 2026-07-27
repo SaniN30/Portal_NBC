@@ -1,12 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { ok, fail, onError } from "@/lib/api";
-import { requireAdmin } from "@/lib/auth";
+import { requireRole } from "@/lib/auth";
 import { contactSchema } from "@/lib/validation";
 import { sendMail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
-    await requireAdmin();
+    await requireRole("recruiter");
     const parsed = contactSchema.safeParse(await req.json().catch(() => null));
     if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
     const { userId, subject, message } = parsed.data;

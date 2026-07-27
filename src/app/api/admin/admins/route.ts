@@ -1,19 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { ok, fail, onError } from "@/lib/api";
-import { requireAdmin } from "@/lib/auth";
-import { promoteAdminSchema } from "@/lib/validation";
+import { requireRole } from "@/lib/auth";
+import { assignRoleSchema } from "@/lib/validation";
 import { normalizeIdentifier } from "@/lib/otp";
 
-// Any admin can add another admin (flat model). Seeded neevbridge is the first.
+// Role management is super_admin-only. Lists every staff member (non-candidate).
 export async function GET() {
   try {
-    await requireAdmin();
-    const admins = await prisma.user.findMany({
-      where: { role: "admin" },
+    await requireRole("super_admin");
+    const staff = await prisma.user.findMany({
+      where: { role: { not: "candidate" } },
       orderBy: { createdAt: "asc" },
-      select: { id: true, fullName: true, email: true, phone: true, createdAt: true },
+      select: { id: true, fullName: true, email: true, phone: true, role: true, createdAt: true },
     });
-    return ok(admins);
+    return ok(staff);
   } catch (e) {
     return onError(e);
   }
@@ -21,18 +21,26 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    await requireAdmin();
-    const parsed = promoteAdminSchema.safeParse(await req.json().catch(() => null));
-    if (!parsed.success) return fail("Enter a valid email");
+    const me = await requireRole("super_admin");
+    const parsed = assignRoleSchema.safeParse(await req.json().catch(() => null));
+    if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
     const email = normalizeIdentifier("email", parsed.data.email);
-    // Upsert so a not-yet-registered person becomes admin on first login.
-    const admin = await prisma.user.upsert({
+    const { role } = parsed.data;
+
+    // Don't let a super_admin demote themselves and risk locking everyone out.
+    const target = await prisma.user.findUnique({ where: { email }, select: { id: true } });
+    if (target && target.id === me.userId && role !== "super_admin") {
+      return fail("You can't change your own super_admin role.", 400);
+    }
+
+    // Upsert so a not-yet-registered person gets the role on first login.
+    const user = await prisma.user.upsert({
       where: { email },
-      update: { role: "admin" },
-      create: { email, role: "admin", emailVerified: false },
+      update: { role },
+      create: { email, role, emailVerified: false },
       select: { id: true, email: true, role: true },
     });
-    return ok(admin);
+    return ok(user);
   } catch (e) {
     return onError(e);
   }

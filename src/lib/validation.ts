@@ -34,7 +34,11 @@ export const jobSchema = z.object({
   status: z.enum(["live", "closed"]).default("live"),
 });
 
-export const promoteAdminSchema = z.object({ email: z.string().email() });
+// super_admin assigns any role by email (candidate demotes back to plain user).
+export const assignRoleSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(["candidate", "recruiter", "hiring_manager", "admin", "super_admin"]),
+});
 
 export const applicationStatusSchema = z.object({
   status: z.enum(["applied", "reviewed", "shortlisted", "rejected"]),

@@ -10,7 +10,10 @@ function secret(): Uint8Array {
   return new TextEncoder().encode(s);
 }
 
-export type Session = { userId: string; role: "candidate" | "admin" };
+export type Role = "candidate" | "recruiter" | "hiring_manager" | "admin" | "super_admin";
+export type Session = { userId: string; role: Role };
+
+export const ROLES: Role[] = ["candidate", "recruiter", "hiring_manager", "admin", "super_admin"];
 
 export async function signSession(s: Session): Promise<string> {
   return new SignJWT(s)
@@ -23,10 +26,10 @@ export async function signSession(s: Session): Promise<string> {
 export async function verifySession(token: string): Promise<Session | null> {
   try {
     const { payload } = await jwtVerify(token, secret());
-    if (typeof payload.userId !== "string" || (payload.role !== "candidate" && payload.role !== "admin")) {
+    if (typeof payload.userId !== "string" || !ROLES.includes(payload.role as Role)) {
       return null;
     }
-    return { userId: payload.userId, role: payload.role };
+    return { userId: payload.userId, role: payload.role as Role };
   } catch {
     return null;
   }

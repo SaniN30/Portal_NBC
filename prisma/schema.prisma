@@ -17,6 +17,9 @@ enum Channel {
 enum Role {
   candidate
   admin
+  recruiter
+  hiring_manager
+  super_admin
 }
 
 enum JobStatus {

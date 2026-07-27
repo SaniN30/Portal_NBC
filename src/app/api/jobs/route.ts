@@ -1,16 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { ok, fail, onError } from "@/lib/api";
 import { getSession } from "@/lib/session";
-import { requireAdmin } from "@/lib/auth";
+import { requireRole, isStaff } from "@/lib/auth";
 import { jobSchema } from "@/lib/validation";
 
-// Public sees live jobs only; admins see all.
+// Public sees live jobs only; staff see all.
 export async function GET() {
   try {
     const session = await getSession();
-    const isAdmin = session?.role === "admin";
+    const staff = session ? isStaff(session.role) : false;
     const jobs = await prisma.job.findMany({
-      where: isAdmin ? {} : { status: "live" },
+      where: staff ? {} : { status: "live" },
       orderBy: { createdAt: "desc" },
       select: { id: true, title: true, description: true, location: true,
         engineeringField: true, status: true, createdAt: true },
@@ -23,7 +23,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { userId } = await requireAdmin();
+    const { userId } = await requireRole("recruiter");
     const parsed = jobSchema.safeParse(await req.json().catch(() => null));
     if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
     const d = parsed.data;

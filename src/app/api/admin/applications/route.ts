@@ -1,13 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { ok, onError } from "@/lib/api";
-import { requireAdmin } from "@/lib/auth";
+import { requireRole } from "@/lib/auth";
 
 const PAGE = 25;
 
 // All applications, newest first, keyset-paginated (?cursor=<lastId>).
 export async function GET(req: Request) {
   try {
-    await requireAdmin();
+    await requireRole("hiring_manager");
     const cursor = new URL(req.url).searchParams.get("cursor");
     const rows = await prisma.application.findMany({
       take: PAGE + 1,

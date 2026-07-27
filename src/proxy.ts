@@ -11,7 +11,9 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (req.nextUrl.pathname.startsWith("/admin") && session.role !== "admin") {
+  // /admin is the staff console — any non-candidate role may enter; the API
+  // routes enforce the finer-grained per-action rank checks.
+  if (req.nextUrl.pathname.startsWith("/admin") && session.role === "candidate") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
