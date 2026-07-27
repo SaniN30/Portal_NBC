@@ -12,7 +12,7 @@
   --surface-2: #f1f6f2;
   --border: oklch(0.922 0 0);
   --text: #0d2149;
-  --muted: oklch(0.97 0 0);
+  --muted: #55637a; /* navy-tinted slate, AA on white — was near-white (invisible) */
   --brand: #1e8a4f;
   --brand-600: #16723f;
   --brand-fg: #ffffff;
