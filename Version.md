@@ -2,8 +2,8 @@
 
 **Live:** https://portal-nbc.vercel.app
 **Repo:** https://github.com/SaniN30/Portal_NBC
-**Stack:** Next.js 16 (App Router, TS) · Prisma 7 + Neon Postgres · Vercel Blob · Resend (email OTP) · Twilio (SMS OTP) · Tailwind v4
-**Last updated:** 2026-07-25
+**Stack:** Next.js 16 (App Router, TS) · Prisma 7 + Supabase Postgres · Vercel Blob · Resend (email OTP) · Twilio (SMS OTP) · Tailwind v4
+**Last updated:** 2026-07-28
 
 ---
 
@@ -46,6 +46,21 @@
 - Login page has a **User / Admin** toggle; picking Admin shows a disclaimer ("restricted to authorized personnel") and routes to `/admin` after verify. Admin is **not** a separate credential — it's a DB role; the real gate stays server-side (middleware blocks non-admins from `/admin`). So user vs admin sign-in use the identical OTP flow; the toggle is routing + disclaimer only.
 - Signup collects no form (first OTP verify creates the account); profile details — now including **nationality** and **Aadhaar upload** — are completed on `/profile`.
 - Schema: `User.nationality`, `User.aadhaarBlobUrl` (migration `1_add_nationality_aadhaar`, applied via `prisma migrate deploy` in the Vercel build).
+
+### RBAC — multi-role (2026-07-28)
+- Roles expanded from `candidate`/`admin` to a **linear hierarchy**: `candidate < hiring_manager < recruiter < admin < super_admin` (each role inherits every capability below it)
+- Single rank-based guard `requireRole(min)` in `src/lib/auth.ts` (`hasRole`/`isStaff` helpers); `requireAdmin` is now an alias for admin-level
+- Per-route gates: jobs CRUD → **recruiter**, application review/status → **hiring_manager**, contact candidate → **recruiter**, candidate list + CSV export (PII) → **admin**, role management → **super_admin**
+- `/admin` (proxy) opens to any staff (non-candidate); candidates redirected. Staff console hides tabs by the viewer's role
+- **Role assignment is super_admin-only**: assign any role by email (upsert, so it applies on the person's first login); self-demotion blocked. Old "Admins" tab → **Roles** manager
+- Seeded first super_admin: `neevbridgeconsultancy@gmail.com` (migration `3_seed_super_admin`, upsert-bootstrapped)
+- Migrations `2_rbac_roles` (enum values) + `3_seed_super_admin`; verified end-to-end (candidate→403, super_admin authorized, staff list + assign round-trip)
+
+### Database — migrated to Supabase (2026-07-28)
+- Production Postgres moved from Neon to **Supabase**. Runtime uses the **transaction pooler** (`6543`, `pgbouncer=true`); migrations use the **session pooler** (`DIRECT_URL`, `5432`)
+- Vercel `buildCommand` runs `prisma migrate deploy` against `DIRECT_URL` — the transaction pooler can't hold the migrate advisory lock and hangs, so the migrate step must use the session connection (`vercel.json`)
+- Prod env: `DATABASE_URL` (pooled) swapped to Supabase; `DIRECT_URL` (session) added for build-time migrations
+- ⚠️ Existing Neon data was **not** carried over — Supabase started fresh (only super_admin seeded). `pg_dump` Neon→Supabase if that data is still needed
 
 ### Free-tier hardening
 - Phone login gated behind Twilio config: API rejects phone OTP cleanly when Twilio is unset; login UI hides the channel toggle (email-only) unless `NEXT_PUBLIC_PHONE_LOGIN_ENABLED=1`. No "no provider" crash for users.
@@ -90,5 +105,5 @@
 ## Known ceilings (deliberate, documented)
 - Resume storage: public-unguessable, not signed-private (see above).
 - **Aadhaar storage: hardened** — stored in **private** Blob (no public URL); viewable only by streaming through auth-checked routes (`/api/me/aadhaar` for self, `/api/admin/aadhaar/[userId]` for admins). Resumes are still public-unguessable — apply the same treatment if resume PII must be gated too.
-- Admin model is **flat** — any admin can add/remove admins (matches "admin team gets all rights" in Idea.md). No super-admin tier.
+- Admin model is **tiered** (as of 2026-07-28) — only **super_admin** assigns roles; admins get all day-to-day rights but can't manage roles. See RBAC section above.
 - OTP is self-hosted (not Twilio Verify) so email + phone share one verify path.
