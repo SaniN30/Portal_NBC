@@ -7,10 +7,10 @@
 /* Neev Bridge design system — white ground, logo green brand, navy ink accent.
    Theme is driven by data-theme on <html>, set before paint (see layout.tsx). */
 :root {
-  --bg: #fbfcfb;
+  --bg: #f6faf7;
   --surface: #ffffff;
-  --surface-2: #f1f6f2;
-  --border: oklch(0.922 0 0);
+  --surface-2: #eef5f0;
+  --border: oklch(0.9 0.008 155); /* brand-tinted hairline — neutral gray read "off" on the green palette */
   --text: #0d2149;
   --muted: #55637a; /* navy-tinted slate, AA on white — was near-white (invisible) */
   --brand: #1e8a4f;
@@ -140,6 +140,16 @@ body {
   transition: background-color .4s ease, color .4s ease;
 }
 
+/* Ambient depth so the ground isn't flat — two soft brand/ink auras, fixed
+   behind content. Very low alpha; stronger tint in light where flat white read off. */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60rem 40rem at 12% -8%, color-mix(in oklab, var(--brand) 9%, transparent), transparent 60%),
+    radial-gradient(52rem 38rem at 100% 0%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 55%);
+}
+:root[data-theme="dark"] body::before { opacity: .5; }
+
 ::selection { background: color-mix(in oklab, var(--brand) 30%, transparent); }
 
 h1, h2, h3 {
@@ -158,7 +168,14 @@ h1, h2, h3 {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: 0 1px 2px rgb(var(--glass-shadow) / 0.05), 0 1px 1px rgb(var(--glass-shadow) / 0.03);
+    box-shadow: 0 1px 2px rgb(var(--glass-shadow) / 0.06), 0 6px 20px -14px rgb(var(--glass-shadow) / 0.28);
+    transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease, border-color .2s ease;
+  }
+  /* Opt-in lift for clickable cards (job rows, tiles). */
+  .card-interactive:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--brand) 45%, var(--border));
+    box-shadow: 0 2px 4px rgb(var(--glass-shadow) / 0.06), 0 18px 40px -20px color-mix(in oklab, var(--brand) 55%, rgb(var(--glass-shadow) / 0.5));
   }
   .input {
     width: 100%;
@@ -180,8 +197,17 @@ h1, h2, h3 {
   }
   .btn:active { transform: translateY(1px) scale(.99); }
   .btn:disabled { opacity: .55; cursor: not-allowed; }
-  .btn-primary { background: var(--brand); color: var(--brand-fg); box-shadow: 0 6px 18px -8px color-mix(in oklab, var(--brand) 70%, transparent); }
+  .btn-primary { position: relative; overflow: hidden; background: var(--brand); color: var(--brand-fg); box-shadow: 0 6px 18px -8px color-mix(in oklab, var(--brand) 70%, transparent); }
   .btn-primary:hover:not(:disabled) { background: var(--brand-600); transform: translateY(-1px); box-shadow: 0 10px 24px -8px color-mix(in oklab, var(--brand) 75%, transparent); }
+  /* Light sheen sweeps across on hover. */
+  .btn-primary::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / 0.35) 50%, transparent 60%);
+    transform: translateX(-120%); transition: transform .6s ease;
+  }
+  .btn-primary:hover:not(:disabled)::after { transform: translateX(120%); }
+  /* Keyboard focus ring — visible for a11y, invisible to mouse users. */
+  .btn:focus-visible, .link:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 40%, transparent); }
   .btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
   .btn-ghost:hover:not(:disabled) { background: var(--surface-2); transform: translateY(-1px); }
   .btn-danger { background: transparent; color: #dc2626; border-color: color-mix(in oklab, #dc2626 30%, var(--border)); }
@@ -191,8 +217,10 @@ h1, h2, h3 {
     padding: .18rem .55rem; border-radius: 999px; border: 1px solid var(--border);
     background: var(--surface-2); color: var(--muted); text-transform: capitalize;
   }
-  .link { color: var(--brand-600); text-decoration: none; }
-  .link:hover { text-decoration: underline; }
+  .link { color: var(--brand-600); text-decoration: none; background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1.5px; background-position: 0 100%; background-repeat: no-repeat; border-radius: 2px;
+    transition: background-size .25s cubic-bezier(.2,.8,.2,1); }
+  .link:hover { background-size: 100% 1.5px; }
   .muted { color: var(--muted); }
 
   /* Liquid glass — floating navbar pill and any frosted surface. */
