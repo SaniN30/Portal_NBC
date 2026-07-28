@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import logoMark from "../../public/logo-mark.png";
 import logoMarkDark from "../../public/logo-mark-dark.png";
 
@@ -57,6 +58,7 @@ function ThemeToggle() {
 }
 
 export function SiteHeader() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -66,6 +68,9 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // The staff console owns its own chrome — no marketing header there.
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:pt-4">
@@ -117,6 +122,8 @@ export function SiteHeader() {
 }
 
 export function SiteFooter() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/admin")) return null;
   return (
     <footer className="mt-auto border-t border-[var(--border)]">
       <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-3 px-6 py-10 text-sm text-[var(--muted)] sm:flex-row sm:items-center">

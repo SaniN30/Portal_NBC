@@ -236,6 +236,41 @@ h1, h2, h3 {
   }
 }
 
+/* ── Staff console world ──────────────────────────────────────────────────
+   A deliberately different surface from the candidate portal: a permanent
+   graphite "control room" (theme-independent), monospace data, one green
+   accent. Scoped token overrides mean every .card/.input/.btn/.badge inside
+   reskins itself — no per-element rewrite. */
+.admin-console {
+  --bg: #0b0f14;
+  --surface: #111823;
+  --surface-2: #0e141d;
+  --border: #1f2b39;
+  --text: #dbe4ee;
+  --muted: #7d8ea3;
+  --brand: #37d489;
+  --brand-600: #2bc079;
+  --brand-fg: #05130c;
+  --ring: #37d489;
+  --glass-shadow: 0 0 0;
+  background:
+    linear-gradient(180deg, #0d131b, var(--bg) 40%),
+    radial-gradient(50rem 30rem at 100% -10%, color-mix(in oklab, var(--brand) 8%, transparent), transparent 60%);
+  color: var(--text);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+.admin-console body::before,
+.admin-console::before { display: none; }
+/* Monospace for identifiers, counts, and system labels — data, not costume. */
+.admin-mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.admin-console h1, .admin-console h2, .admin-console h3 { font-family: var(--font-sans), system-ui, sans-serif; letter-spacing: -0.02em; }
+/* Slim console top bar. */
+.admin-bar {
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 70%, transparent);
+  backdrop-filter: blur(12px);
+}
+
 /* Border beam — a light tracing the CTA edge (Magic/Inspira-style, pure CSS). */
 @property --beam-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 .beam-border { position: relative; }

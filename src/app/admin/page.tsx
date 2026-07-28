@@ -14,8 +14,10 @@ const ROLES = ["candidate", "recruiter", "hiring_manager", "admin", "super_admin
 type Role = (typeof ROLES)[number];
 const RANK: Record<Role, number> = { candidate: 0, hiring_manager: 1, recruiter: 2, admin: 3, super_admin: 4 };
 
-const field = "rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:border-neutral-700 dark:bg-neutral-900";
-const btn = "rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700 dark:bg-white dark:text-neutral-900";
+// Alias the design-system classes so every console form adopts the scoped
+// .admin-console tokens (was raw neutral-* that ignored the theme).
+const field = "input";
+const btn = "btn btn-primary";
 
 // Each tab's minimum role, matching the route guards.
 const TAB_MIN: Record<string, Role> = {
@@ -37,13 +39,21 @@ export default function AdminPage() {
   const active = tabs.includes(tab) ? tab : tabs[0];
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-6 py-10">
-      <header className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Staff console</h1>
-          <p className="text-sm muted">{role ? `Signed in as ${role.replace("_", " ")}` : "Loading…"}</p>
+    <main className="mx-auto w-full max-w-5xl px-6 py-8">
+      <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="grid h-9 w-9 place-items-center rounded-lg border border-[var(--border)] bg-[var(--surface-2)] admin-mono text-sm font-bold text-[var(--brand)]">
+            {role ? role[0].toUpperCase() : "·"}
+          </span>
+          <div>
+            <p className="text-sm font-medium">Signed in</p>
+            <p className="admin-mono text-xs uppercase tracking-widest text-[var(--muted)]">{role ? role.replace("_", " ") : "loading…"}</p>
+          </div>
         </div>
-        <Link href="/profile" className="link text-sm">Profile</Link>
+        <div className="flex items-center gap-2 text-sm">
+          <Link href="/profile" className="btn btn-ghost px-3 py-1.5">Profile</Link>
+          <button onClick={() => api("/api/auth/logout", { method: "POST" }).then(() => (window.location.href = "/"))} className="btn btn-ghost px-3 py-1.5">Sign out</button>
+        </div>
       </header>
       {role && tabs.length === 0 && <p className="muted">You don&apos;t have access to any staff tools.</p>}
       {tabs.length > 0 && (
@@ -142,25 +152,25 @@ function Candidates() {
     <div className="overflow-x-auto">
       {msg && <p role="status" className="text-sm muted">{msg}</p>}
       <div className="mb-3 flex justify-end">
-        <a href="/api/admin/candidates/export" className="text-sm text-blue-600 hover:underline">Download CSV</a>
+        <a href="/api/admin/candidates/export" className="text-sm link">Download CSV</a>
       </div>
       <table className="w-full text-left text-sm">
-        <thead className="text-neutral-500"><tr>
+        <thead className="text-[var(--muted)]"><tr>
           <th className="py-2">Name</th><th>Email</th><th>Phone</th><th>Nationality</th><th>Apps</th><th>Resume</th><th>Aadhaar</th></tr></thead>
         <tbody>
           {items.map((c) => (
-            <tr key={c.id} className="border-t border-neutral-200 dark:border-neutral-800">
+            <tr key={c.id} className="border-t border-[var(--border)]">
               <td className="py-2">{c.fullName ?? "—"}</td><td>{c.email ?? "—"}</td><td>{c.phone ?? "—"}</td>
               <td>{c.nationality ?? "—"}</td>
               <td>{c._count.applications}</td>
-              <td>{c.resumeBlobUrl ? <a href={c.resumeBlobUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">View</a> : "—"}</td>
-              <td>{c.aadhaarBlobUrl ? <a href={`/api/admin/aadhaar/${c.id}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">View</a> : "—"}</td>
+              <td>{c.resumeBlobUrl ? <a href={c.resumeBlobUrl} target="_blank" rel="noreferrer" className="link">View</a> : "—"}</td>
+              <td>{c.aadhaarBlobUrl ? <a href={`/api/admin/aadhaar/${c.id}`} target="_blank" rel="noreferrer" className="link">View</a> : "—"}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      {items.length === 0 && <p className="py-4 text-neutral-500">No candidates yet.</p>}
-      {more && <button onClick={() => load(cursor!)} className="mt-4 text-sm text-neutral-500 hover:underline">Load more</button>}
+      {items.length === 0 && <p className="py-4 text-[var(--muted)]">No candidates yet.</p>}
+      {more && <button onClick={() => load(cursor!)} className="mt-4 text-sm text-[var(--muted)] hover:underline">Load more</button>}
     </div>
   );
 }
@@ -183,7 +193,7 @@ function Jobs() {
   async function close(id: string) { await api(`/api/jobs/${id}`, { method: "DELETE" }); load(); }
   return (
     <div className="flex flex-col gap-6">
-      <form onSubmit={create} className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
+      <form onSubmit={create} className="flex flex-col gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
         <h2 className="font-medium">Post a job</h2>
         <input name="title" required placeholder="Title" className={field} />
         <div className="flex flex-wrap gap-3">
@@ -200,13 +210,13 @@ function Jobs() {
       </form>
       <ul className="flex flex-col gap-2">
         {jobs.map((j) => (
-          <li key={j.id} className="flex items-center justify-between rounded-lg border border-neutral-200 px-4 py-3 text-sm dark:border-neutral-800">
-            <span>{j.title} <span className="text-neutral-400">({j.status})</span></span>
+          <li key={j.id} className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm">
+            <span>{j.title} <span className="text-[var(--muted)]">({j.status})</span></span>
             {j.status === "live" && <button onClick={() => close(j.id)} className="text-red-600 hover:underline">Close</button>}
           </li>
         ))}
       </ul>
-      {msg && <p role="status" className="text-sm text-neutral-500">{msg}</p>}
+      {msg && <p role="status" className="text-sm text-[var(--muted)]">{msg}</p>}
     </div>
   );
 }
@@ -229,7 +239,7 @@ function Roles() {
   }
   return (
     <div className="flex flex-col gap-6">
-      <form onSubmit={assign} className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
+      <form onSubmit={assign} className="flex flex-col gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
         <h2 className="font-medium">Assign a role</h2>
         <div className="flex flex-wrap gap-3">
           <input name="email" type="email" required placeholder="email@example.com" className={`${field} flex-1`} />
@@ -241,14 +251,14 @@ function Roles() {
       </form>
       <ul className="flex flex-col gap-2">
         {staff.map((s) => (
-          <li key={s.id} className="flex items-center justify-between rounded-lg border border-neutral-200 px-4 py-3 text-sm dark:border-neutral-800">
+          <li key={s.id} className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm">
             <span>{s.email ?? s.fullName ?? s.id}</span>
-            <span className="capitalize text-neutral-500">{s.role.replace("_", " ")}</span>
+            <span className="capitalize text-[var(--muted)]">{s.role.replace("_", " ")}</span>
           </li>
         ))}
       </ul>
       {staff.length === 0 && <p className="muted py-2">No staff yet.</p>}
-      {msg && <p role="status" className="text-sm text-neutral-500">{msg}</p>}
+      {msg && <p role="status" className="text-sm text-[var(--muted)]">{msg}</p>}
     </div>
   );
 }
