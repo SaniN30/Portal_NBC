@@ -75,7 +75,7 @@ function LoginForm() {
 
       {step === "request" ? (
         <form onSubmit={requestCode} className="flex flex-col gap-4">
-          <div className="flex rounded-lg bg-neutral-100 p-1 text-sm dark:bg-neutral-800">
+          <div className="flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-1 text-sm">
             {(["user", "admin"] as LoginAs[]).map((r) => (
               <button
                 key={r}
@@ -83,7 +83,7 @@ function LoginForm() {
                 onClick={() => setLoginAs(r)}
                 aria-pressed={loginAs === r}
                 className={`flex-1 rounded-md py-2 capitalize transition ${
-                  loginAs === r ? "bg-white shadow-sm dark:bg-neutral-700" : "text-neutral-500"
+                  loginAs === r ? "bg-[var(--surface)] font-medium text-[var(--foreground)] shadow-sm" : "text-[var(--muted)]"
                 }`}
               >
                 {r}
@@ -96,7 +96,7 @@ function LoginForm() {
             </p>
           )}
           {PHONE_ENABLED && (
-            <div className="flex rounded-lg bg-neutral-100 p-1 text-sm dark:bg-neutral-800">
+            <div className="flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-1 text-sm">
               {(["email", "phone"] as Channel[]).map((c) => (
                 <button
                   key={c}
@@ -104,7 +104,7 @@ function LoginForm() {
                   onClick={() => setChannel(c)}
                   aria-pressed={channel === c}
                   className={`flex-1 rounded-md py-2 capitalize transition ${
-                    channel === c ? "bg-white shadow-sm dark:bg-neutral-700" : "text-neutral-500"
+                    channel === c ? "bg-[var(--surface)] font-medium text-[var(--foreground)] shadow-sm" : "text-[var(--muted)]"
                   }`}
                 >
                   {c}
