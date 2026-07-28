@@ -74,13 +74,13 @@ export default function ProfilePage() {
             <h1 className="truncate font-display text-2xl font-bold tracking-tight">{me.fullName || "Your profile"}</h1>
             <p className="truncate text-sm text-[var(--muted)]">
               {me.email || "No email set"}
-              {me.role === "admin" && <span className="badge ml-2 border-[color-mix(in_oklab,var(--brand)_35%,var(--border))] text-[var(--brand-600)]">Admin</span>}
+              {me.role !== "candidate" && <span className="badge ml-2 border-[color-mix(in_oklab,var(--brand)_35%,var(--border))] text-[var(--brand-600)]">Staff</span>}
             </p>
           </div>
         </div>
         <nav className="flex shrink-0 gap-2 text-sm">
           <Link href="/listing" className="btn btn-ghost px-3 py-1.5">Jobs</Link>
-          {me.role === "admin" && <Link href="/admin" className="btn btn-ghost px-3 py-1.5">Admin</Link>}
+          {me.role !== "candidate" && <Link href="/admin" className="btn btn-ghost px-3 py-1.5">Admin</Link>}
           <button onClick={() => api("/api/auth/logout", { method: "POST" }).then(() => (window.location.href = "/"))} className="btn btn-ghost px-3 py-1.5">Sign out</button>
         </nav>
       </header>

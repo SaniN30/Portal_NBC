@@ -132,12 +132,15 @@ function Candidates() {
   const [items, setItems] = useState<Candidate[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [more, setMore] = useState(false);
+  const [msg, setMsg] = useState("");
   const load = (c?: string) =>
     api<{ items: Candidate[]; nextCursor: string | null }>(`/api/admin/candidates${c ? `?cursor=${c}` : ""}`)
-      .then((d) => { setItems((p) => c ? [...p, ...d.items] : d.items); setCursor(d.nextCursor); setMore(Boolean(d.nextCursor)); });
+      .then((d) => { setItems((p) => c ? [...p, ...d.items] : d.items); setCursor(d.nextCursor); setMore(Boolean(d.nextCursor)); })
+      .catch((e) => setMsg((e as Error).message));
   useEffect(() => { load(); }, []);
   return (
     <div className="overflow-x-auto">
+      {msg && <p role="status" className="text-sm muted">{msg}</p>}
       <div className="mb-3 flex justify-end">
         <a href="/api/admin/candidates/export" className="text-sm text-blue-600 hover:underline">Download CSV</a>
       </div>
@@ -165,7 +168,7 @@ function Candidates() {
 function Jobs() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [msg, setMsg] = useState("");
-  const load = () => api<Job[]>("/api/jobs").then(setJobs);
+  const load = () => api<Job[]>("/api/jobs").then(setJobs).catch((e) => setMsg((e as Error).message));
   useEffect(() => { load(); }, []);
   async function create(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); setMsg("");
