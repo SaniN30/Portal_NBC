@@ -19,16 +19,9 @@ async function post(url: string, body: unknown) {
   return json.data;
 }
 
-type LoginAs = "user" | "admin";
-
 function LoginForm() {
   const router = useRouter();
   const explicitNext = useSearchParams().get("next");
-
-  const [loginAs, setLoginAs] = useState<LoginAs>("user");
-  // Where to land after verify. Admin role is still enforced server-side —
-  // picking "Admin" only routes you there; proxy blocks non-admins.
-  const nextPath = explicitNext ?? (loginAs === "admin" ? "/admin" : "/profile");
 
   const [channel, setChannel] = useState<Channel>("email");
   const [identifier, setIdentifier] = useState("");
@@ -56,8 +49,10 @@ function LoginForm() {
     setBusy(true);
     setError("");
     try {
-      await post("/api/auth/verify-otp", { channel, identifier, code });
-      router.push(nextPath);
+      const { role } = await post("/api/auth/verify-otp", { channel, identifier, code });
+      // Staff land in the console portal; candidates in their profile. Server
+      // enforces access — this is just the initial destination.
+      router.push(explicitNext ?? (role !== "candidate" ? "/admin" : "/profile"));
       router.refresh();
     } catch (err) {
       setError((err as Error).message);
@@ -75,26 +70,6 @@ function LoginForm() {
 
       {step === "request" ? (
         <form onSubmit={requestCode} className="flex flex-col gap-4">
-          <div className="flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-1 text-sm">
-            {(["user", "admin"] as LoginAs[]).map((r) => (
-              <button
-                key={r}
-                type="button"
-                onClick={() => setLoginAs(r)}
-                aria-pressed={loginAs === r}
-                className={`flex-1 rounded-md py-2 capitalize transition ${
-                  loginAs === r ? "bg-[var(--surface)] font-medium text-[var(--foreground)] shadow-sm" : "text-[var(--muted)]"
-                }`}
-              >
-                {r}
-              </button>
-            ))}
-          </div>
-          {loginAs === "admin" && (
-            <p role="note" className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-200">
-              Admin sign-in is restricted to authorized personnel only. Access is granted by role — you&apos;ll be redirected if your account is not an admin.
-            </p>
-          )}
           {PHONE_ENABLED && (
             <div className="flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-1 text-sm">
               {(["email", "phone"] as Channel[]).map((c) => (
@@ -104,7 +79,7 @@ function LoginForm() {
                   onClick={() => setChannel(c)}
                   aria-pressed={channel === c}
                   className={`flex-1 rounded-md py-2 capitalize transition ${
-                    channel === c ? "bg-[var(--surface)] font-medium text-[var(--foreground)] shadow-sm" : "text-[var(--muted)]"
+                    channel === c ? "bg-[var(--surface)] font-medium text-[var(--text)] shadow-sm" : "text-[var(--muted)]"
                   }`}
                 >
                   {c}
