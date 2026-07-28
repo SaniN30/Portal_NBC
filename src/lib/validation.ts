@@ -31,6 +31,9 @@ export const jobSchema = z.object({
   description: z.string().min(1),
   location: z.string().max(120).optional().or(z.literal("")),
   engineeringField: z.string().max(120).optional().or(z.literal("")),
+  duration: z.string().max(80).optional().or(z.literal("")),
+  timeline: z.string().max(80).optional().or(z.literal("")),
+  ctc: z.string().max(80).optional().or(z.literal("")),
   status: z.enum(["live", "closed"]).default("live"),
 });
 

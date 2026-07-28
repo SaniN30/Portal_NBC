@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/client";
 
-type Job = { id: string; title: string; description: string; location: string | null; engineeringField: string | null };
+type Job = { id: string; title: string; description: string; location: string | null; engineeringField: string | null; duration: string | null; timeline: string | null; ctc: string | null };
 
 export default function ListingPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -28,7 +28,7 @@ export default function ListingPage() {
     return jobs.filter((j) => {
       if (field !== "All" && j.engineeringField !== field) return false;
       if (!needle) return true;
-      return [j.title, j.engineeringField, j.location, j.description]
+      return [j.title, j.engineeringField, j.location, j.duration, j.timeline, j.ctc, j.description]
         .some((v) => v?.toLowerCase().includes(needle));
     });
   }, [jobs, q, field]);
@@ -105,6 +105,13 @@ export default function ListingPage() {
                       <div className="mt-1.5 flex flex-wrap gap-2 text-xs text-[var(--muted)]">
                         {j.engineeringField && <span className="badge border-[var(--border)]">{j.engineeringField}</span>}
                         {j.location && <span className="badge border-[var(--border)]">📍 {j.location}</span>}
+                        {j.duration && <span className="badge border-[var(--border)]">⏱ {j.duration}</span>}
+                        {j.timeline && <span className="badge border-[var(--border)]">🗓 {j.timeline}</span>}
+                        {j.ctc && (
+                          <span className="badge border-[color-mix(in_oklab,var(--brand)_35%,var(--border))] font-medium text-[var(--brand-600)]">
+                            💰 {j.ctc}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <button

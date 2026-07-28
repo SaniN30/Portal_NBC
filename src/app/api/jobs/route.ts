@@ -13,7 +13,8 @@ export async function GET() {
       where: staff ? {} : { status: "live" },
       orderBy: { createdAt: "desc" },
       select: { id: true, title: true, description: true, location: true,
-        engineeringField: true, status: true, createdAt: true },
+        engineeringField: true, duration: true, timeline: true, ctc: true,
+        status: true, createdAt: true },
     });
     return ok(jobs);
   } catch (e) {
@@ -28,7 +29,15 @@ export async function POST(req: Request) {
     if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Invalid input");
     const d = parsed.data;
     const job = await prisma.job.create({
-      data: { ...d, location: d.location || null, engineeringField: d.engineeringField || null, createdById: userId },
+      data: {
+        ...d,
+        location: d.location || null,
+        engineeringField: d.engineeringField || null,
+        duration: d.duration || null,
+        timeline: d.timeline || null,
+        ctc: d.ctc || null,
+        createdById: userId,
+      },
     });
     return ok(job, 201);
   } catch (e) {

@@ -175,7 +175,8 @@ function Jobs() {
     const f = new FormData(e.currentTarget);
     try {
       await api("/api/jobs", { method: "POST", body: JSON.stringify({
-        title: f.get("title"), description: f.get("description"), location: f.get("location"), engineeringField: f.get("engineeringField") }) });
+        title: f.get("title"), description: f.get("description"), location: f.get("location"), engineeringField: f.get("engineeringField"),
+        duration: f.get("duration"), timeline: f.get("timeline"), ctc: f.get("ctc") }) });
       (e.target as HTMLFormElement).reset(); load(); setMsg("Job posted.");
     } catch (e) { setMsg((e as Error).message); }
   }
@@ -185,9 +186,14 @@ function Jobs() {
       <form onSubmit={create} className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
         <h2 className="font-medium">Post a job</h2>
         <input name="title" required placeholder="Title" className={field} />
-        <div className="flex gap-3">
-          <input name="engineeringField" placeholder="Field (e.g. Civil)" className={`${field} flex-1`} />
-          <input name="location" placeholder="Location" className={`${field} flex-1`} />
+        <div className="flex flex-wrap gap-3">
+          <input name="engineeringField" placeholder="Field (e.g. Civil)" className={`${field} min-w-40 flex-1`} />
+          <input name="location" placeholder="Location" className={`${field} min-w-40 flex-1`} />
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <input name="duration" placeholder="Duration (e.g. 12 months / Permanent)" className={`${field} min-w-40 flex-1`} />
+          <input name="timeline" placeholder="Timeline (e.g. Immediate joiner)" className={`${field} min-w-40 flex-1`} />
+          <input name="ctc" placeholder="CTC / Package (e.g. ₹8–12 LPA)" className={`${field} min-w-40 flex-1`} />
         </div>
         <textarea name="description" required placeholder="Description" rows={4} className={field} />
         <button className={btn + " self-start"}>Post</button>

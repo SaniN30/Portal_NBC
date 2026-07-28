@@ -63,6 +63,9 @@ model Job {
   description      String
   location         String?
   engineeringField String?
+  duration         String?
+  timeline         String?
+  ctc              String?
   status           JobStatus @default(live)
   createdById      String
   createdBy        User      @relation("JobCreatedBy", fields: [createdById], references: [id])
